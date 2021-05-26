@@ -2,36 +2,28 @@ import React, {useRef, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import Massage from '../components/Massage';
 import TypingArea from '../components/TypingArea';
-import {StreamChat} from 'stream-chat';
 import socketClient from 'socket.io-client';
-// import {observer, useObservable} from 'mobx-react-lite';
 import {observer} from 'mobx-react-lite';
 
 import store from '../store/Store';
 // const CHAT_SERVER = 'http://192.168.161.1:4000';
-// const client = new StreamChat('12345');
-
 const Chat = props => {
   const scrollViewRef = useRef();
-  const userId = `User${Math.floor(Math.random() * 1000000)}`;
   // const CHAT_SERVER = 'http://192.168.161.1:3000';
   const CHAT_SERVER = 'https://chat-server-yoel.herokuapp.com';
-
   var socket = socketClient(CHAT_SERVER);
 
   const [massages, setMassages] = useState([]);
 
   React.useEffect(() => {
     const massage = {
-      user: {userId, userName: 'Yoel'},
-      body: 'massage',
-      time: Date.now(),
+      user: {userId: store.id, userName: store.name},
+      body: `${store.name} enter in room`,
     };
 
-    setMassages(prev => [...prev, massage]);
+    // setMassages(prev => [...prev, massage]);
     socket.emit('chat message', massage);
 
-    // socket.on('chat message', data => {});
     socket.on('chat message', data => {
       setMassages(prev => [...prev, data]);
       console.log(
@@ -43,6 +35,7 @@ const Chat = props => {
       socket.emit('end');
       socket.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSendMassage = massageToSend => {
@@ -50,19 +43,17 @@ const Chat = props => {
       user: {userId: store.id, userName: store.name},
       body: massageToSend,
     };
-
     socket.emit('chat message', massage);
-    // massage.time = Date.now();
-    // setMassages(prev => [...prev, massage]);
   };
-  console.log(massages);
+
   return (
     <View style={styles.rootChat}>
       <ScrollView
         contentContainerStyle={styles.scroll}
         ref={scrollViewRef}
-        onContentSizeChange={() =>
-          scrollViewRef.current.scrollToEnd({animated: true})
+        onContentSizeChange={
+          // () => scrollViewRef.current.scrollToEnd({animated: true})
+          scrollViewRef.current.scrollToEnd()
         }>
         {massages.map((el, i) => {
           return (
@@ -73,9 +64,6 @@ const Chat = props => {
             />
           );
         })}
-        {/* {[1, 4, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16, 14, 12].map((el, i) => {
-          return <Massage from={el} key={i} />;
-        })} */}
       </ScrollView>
       <TypingArea onSendMassage={onSendMassage} />
     </View>
@@ -83,8 +71,6 @@ const Chat = props => {
 };
 
 export default observer(Chat);
-
-// export default Chat;
 
 const styles = StyleSheet.create({
   scroll: {flexGrow: 1, justifyContent: 'flex-end'},
