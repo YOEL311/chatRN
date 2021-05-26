@@ -51,8 +51,7 @@ const Chat = props => {
         contentContainerStyle={styles.scroll}
         ref={scrollViewRef}
         onContentSizeChange={
-          // () => scrollViewRef.current.scrollToEnd({animated: true})
-          scrollViewRef.current.scrollToEnd()
+          () => scrollViewRef.current.scrollToEnd({animated: true})
         }>
         {massages.map((el, i) => {
           return (
