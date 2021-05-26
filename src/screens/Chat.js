@@ -20,15 +20,16 @@ const Chat = props => {
       body: `${store.name} enter in room`,
     };
 
-    // setMassages(prev => [...prev, massage]);
     socket.emit('chat message', massage);
 
     socket.on('chat message', data => {
-      setMassages(prev => [...prev, data]);
       console.log(
         '🚀 ~ file: chat.js ~ line 31 ~ React.useEffect ~ data',
         data,
       );
+      if (data.user.userId !== store.id) {
+        setMassages(prev => [...prev, data]);
+      }
     });
     return () => {
       socket.emit('end');
@@ -43,6 +44,9 @@ const Chat = props => {
       body: massageToSend,
     };
     socket.emit('chat message', massage);
+    massage.time = Date.now();
+    massage.isMyMassage = true;
+    setMassages(prev => [...prev, massage]);
   };
 
   return (
@@ -52,8 +56,13 @@ const Chat = props => {
         ref={scrollViewRef}
         onContentSizeChange={
           () => scrollViewRef.current.scrollToEnd({animated: true})
+<<<<<<< HEAD
+=======
+          // scrollViewRef.current.scrollToEnd()
+>>>>>>> d978fac83c51d0f325170c04d3206f553725b6e4
         }>
         {massages.map((el, i) => {
+          console.log('🚀 ~ file: chat.js ~ line 80 ~ {massages.map ~ el', el);
           return (
             <Massage
               key={el.time}
