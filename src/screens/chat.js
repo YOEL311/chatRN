@@ -6,7 +6,6 @@ import socketClient from 'socket.io-client';
 import {observer} from 'mobx-react-lite';
 
 import store from '../store/Store';
-// const CHAT_SERVER = 'http://192.168.161.1:4000';
 const Chat = props => {
   const scrollViewRef = useRef();
   // const CHAT_SERVER = 'http://192.168.161.1:3000';
