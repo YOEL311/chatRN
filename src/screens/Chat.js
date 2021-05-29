@@ -73,6 +73,17 @@ const Chat = props => {
   );
 };
 
+Chat.options = {
+  topBar: {
+    title: {
+      text: 'Chat',
+      color: 'white',
+    },
+    background: {
+      color: '#8d6c9f',
+    },
+  },
+};
 export default observer(Chat);
 
 const styles = StyleSheet.create({
